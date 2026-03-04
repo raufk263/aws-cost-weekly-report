@@ -1,45 +1,65 @@
 # AWS Weekly Cost Report Automation
 
-This project automates sending a **weekly AWS cost report** via email using **AWS Lambda** and **SNS**. The report lists **top AWS services by cost**, regions, and weekly comparisons.
+This project automates sending a **weekly AWS cost report** via email using **AWS Lambda** and **SNS**.  
+It tracks the top AWS services by cost, shows regions, compares current week vs last week, and delivers the report automatically every Monday.
+
+---
 
 ## Features
+
 - Fetches AWS cost data via **Cost Explorer**
-- Generates a **plain-text table** for email
-- Sends the report automatically via **SNS**
+- Generates a **neatly formatted plain-text table**
+- Sends the report via **SNS** to your email
 - Compares **current week vs previous week**
 - Fully automated with **EventBridge schedule**
 
+---
+
 ## Prerequisites
-- AWS account with **Cost Explorer** enabled
+
+- AWS account with **Cost Explorer enabled**
 - Verified email for SNS subscription
-- IAM role with permissions:
+- IAM Role for Lambda with permissions:
   - `AWSLambdaBasicExecutionRole`
   - `AmazonCostExplorerReadOnlyAccess`
   - `AmazonSNSFullAccess` (or restricted to your topic)
 
-## Setup Steps
+---
 
-1. **Create SNS Topic**
-   - Go to AWS SNS → Topics → Create Topic
-   - Add a subscription with your email → confirm
+## Setup Instructions
 
-2. **Create IAM Role for Lambda**
-   - Go to AWS IAM → Roles → Create Role
-   - Assign Lambda service + permissions listed above
+### 1️⃣ Create SNS Topic
+1. Go to **AWS SNS → Topics → Create Topic**
+2. Select **Standard**, give it a name
+3. Add a **subscription** with your email and confirm it
 
-3. **Create Lambda Function**
-   - Runtime: Python 3.11
-   - Paste `lambda_function.py` code
-   - Assign the IAM role created
+### 2️⃣ Create IAM Role for Lambda
+1. Go to **IAM → Roles → Create Role**
+2. Select **Lambda** as the service
+3. Attach policies:
+   - `AWSLambdaBasicExecutionRole`
+   - `AmazonCostExplorerReadOnlyAccess`
+   - `AmazonSNSFullAccess`
+4. Name the role (e.g., `LambdaCostReportRole`)
 
-4. **Update SNS Topic ARN**
-   - Replace `SNS_TOPIC_ARN` in `lambda_function.py` with your topic ARN
+### 3️⃣ Create Lambda Function
+1. Go to **Lambda → Create Function → Author from scratch**
+2. Runtime: **Python 3.11**
+3. Assign the **IAM role** created
+4. Paste the Python code from `lambda_function.py`
+5. Update `SNS_TOPIC_ARN` with your topic ARN
 
-5. **Test Lambda**
-   - Run a test event → check your email for report
+### 4️⃣ Test Lambda
+- Click **Test** → use a simple event
+- Check your email → the report should arrive
 
-6. **Automate with EventBridge**
-   - Schedule Lambda to run every Monday using a cron expression
+### 5️⃣ Automate with EventBridge
+1. Go to **EventBridge → Rules → Create rule**
+2. Select **Schedule → Cron expression**
    - Example: `cron(30 2 ? * MON *)` → every Monday 8:30 AM IST
+3. Add **Lambda function** as target
+4. Enable the rule
+
+---
 
 ## Sample Report
