@@ -63,3 +63,5 @@ It tracks the top AWS services by cost, shows regions, compares current week vs 
 ---
 
 ## Sample Report
+<img width="813" height="549" alt="image" src="https://github.com/user-attachments/assets/4a557a49-75c4-4f18-96b9-0d15f9a56f6a" />
+
